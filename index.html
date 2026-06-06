@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teleprompter Recorder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="editorScreen">
+        <div id="editorBar">
+            <button id="editCloseBtn" class="editBtn" >Clear</button>
+            <button id="editDiscardBtn" class="editBtn" >Discard</button>
+            <button id="editSaveBtn" class="editBtn" >Save</button>
+        </div>
+
+        <textarea name="" id="textEditor" placeholder="Enter Text Here..."></textarea>
+    </div>
+
+    <div id="practiceScreen">
+        <div id="textContainer">
+            <div id="Textbar">
+                <button id="editorBtn" class="textBtn" >Editor</button>
+                <button id="playBtn" class="textBtn" >Play</button>
+            </div>
+            <div id="textSection">
+            </div>
+        </div>
+        <video id="Camera" autoplay playsinline muted></video>
+
+        <div id="Toolbar">
+            <button id="startRecording">Start Recording</button>
+        </div>
+    </div>
+    
+
+    <script src="script.js" ></script>
+</body>
+</html>
