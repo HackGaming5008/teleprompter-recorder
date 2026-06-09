@@ -2,6 +2,7 @@ body{
     margin: 0;
     background: rgb(39, 39, 39);
     overflow: hidden;
+    color: black;
 }
 
 #editorScreen{
@@ -99,17 +100,7 @@ body{
     font-size: 20px;
     white-space: pre-wrap;
     z-index: 19;
-    overflow: hidden;
-}
-
-#textContentWrapper{
-    padding: 10px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    will-change: transform;
-    white-space: pre-wrap;
+    overflow: auto;
 }
 
 
@@ -144,4 +135,82 @@ body{
     transition: 0.2s;    
     border-radius: 15px;
     border: none;
+}
+
+#speedSlider{
+    position: absolute;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    border: none;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; /* Hides default slider in Webkit */
+  appearance: none;         /* Hides default slider in modern browsers */
+  width: 100%;             /* Ensures full-width scalability */
+  background: transparent;  /* Removes default gray background */
+  cursor: pointer;
+}
+
+input[type="range"]:focus {
+  outline: none;            /* Removes default focus ring */
+}
+
+
+/* Chrome, Safari, Edge, and Opera */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #ddd;
+  height: 8px;
+  border-radius: 4px;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+  background: #ddd;
+  height: 8px;
+  border-radius: 4px;
+}
+
+
+/* Chrome, Safari, Edge, and Opera */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Required to apply custom sizes */
+  appearance: none;
+  background: #04AA6D;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  margin-top: -6px;        /* Centers thumb on the 8px track ( (8/2) - (20/2) ) */
+  transition: transform 0.1s ease;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  border: none;            /* Removes default Firefox border */
+  background: #04AA6D;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  transition: transform 0.1s ease;
+}
+
+
+/* Hover state */
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.1);
+  background: #038c5a;
+}
+input[type="range"]:hover::-moz-range-thumb {
+  transform: scale(1.1);
+  background: #038c5a;
+}
+
+/* Active/Dragging state */
+input[type="range"]:active::-webkit-slider-thumb {
+  background: #026943;
+}
+input[type="range"]:active::-moz-range-thumb {
+  background: #026943;
 }

@@ -11,39 +11,44 @@ const textSection = document.getElementById("textSection");
 
 const editorBtn = document.getElementById("editorBtn");
 const playBtn = document.getElementById("playBtn");
+const speedSlider = document.getElementById("speedSlider");
+
 
 // ensure Play button shows correct initial label
 playBtn.textContent = "Play";
 
-let textWrapper = null;
 
 let stream;
 let cameraActive = false;
 let isPlaying = false;
 
-let position = 0;
 let speed = 60; // pixels per second
 let lastTime = null;
 let rafId = null;
+
+textEditor.value = localStorage.getItem("savedScript") || "";
+
 
 function animate(time) {
     if (!lastTime) lastTime = time;
     const delta = (time - lastTime) / 1000; // seconds
     lastTime = time;
-    position -= speed * delta;
-    if (textWrapper) textWrapper.style.transform = `translateY(${position}px)`;
+    // position -= speed * delta;
+    textSection.scrollTop += speed * delta;
+    // if (textWrapper) textWrapper.style.transform = `translateY(${position}px)`;
     rafId = requestAnimationFrame(animate);
-}
+};
 
-// Toggle play/pause and start/stop the animation loop
-playBtn.addEventListener("click", () => {
+function toggle_Scroll(){
     isPlaying = !isPlaying;
     if (isPlaying) {
         playBtn.textContent = "Pause";
-        textSection.style.overflow = "hidden";
+        // textSection.style.overflow = "hidden";
         // start animation
         lastTime = null;
-        rafId = requestAnimationFrame(animate);
+        if (!rafId){
+            rafId = requestAnimationFrame(animate);
+        }
     } else {
         playBtn.textContent = "Play";
         textSection.style.overflow = "auto";
@@ -55,6 +60,17 @@ playBtn.addEventListener("click", () => {
         }
         lastTime = null;
     }
+};
+
+
+speedSlider.addEventListener("input", () => { 
+    speed= Number(speedSlider.value);
+});
+
+
+// Toggle play/pause and start/stop the animation loop
+playBtn.addEventListener("click", () => {
+    toggle_Scroll()
 });
 
 // Open editor screen when Editor button clicked
@@ -78,23 +94,16 @@ if (editDiscardBtn) {
 
 saveBtn.addEventListener("click", async () => {
     // create or update inner wrapper so we animate the content only
-    if (textSection.firstElementChild && textSection.firstElementChild.id === 'textContentWrapper'){
-        textWrapper = textSection.firstElementChild;
-    } else {
-        textSection.innerHTML = '';
-        textWrapper = document.createElement('div');
-        textWrapper.id = 'textContentWrapper';
-        textSection.appendChild(textWrapper);
-    }
-    textWrapper.textContent = textEditor.value;
-    // reset scroll position and stop playback
-    position = 0;
-    if (textWrapper) textWrapper.style.transform = `translateY(${position}px)`;
     isPlaying = false;
     playBtn.textContent = "Play";
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     lastTime = null;
     EditorScreen.style.display = "none";
+
+    localStorage.setItem(
+        "savedScript",
+        textEditor.value
+    );
 });
 
 startBtn.addEventListener("click", async () =>{
@@ -115,12 +124,15 @@ startBtn.addEventListener("click", async () =>{
             startBtn.style.background = "#b32727"
             startBtn.style.color = "white"
 
+            toggle_Scroll();
+
         } catch(error){
             console.error(error);
             alert("Could not access camera.");
         }
     }
     else{
+        toggle_Scroll();
 
         cameraActive = false
 
@@ -131,6 +143,9 @@ startBtn.addEventListener("click", async () =>{
         startBtn.textContent = "Start Recording"
         startBtn.style.background = "white"
         startBtn.style.color = "black"
+
     }
 
 });
+
+
