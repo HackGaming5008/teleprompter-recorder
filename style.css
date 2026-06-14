@@ -3,6 +3,7 @@ body{
     background: rgb(39, 39, 39);
     overflow: hidden;
     color: black;
+    font-family: Arial, sans-serif;
 }
 
 #editorScreen{
@@ -213,4 +214,40 @@ input[type="range"]:active::-webkit-slider-thumb {
 }
 input[type="range"]:active::-moz-range-thumb {
   background: #026943;
+}
+
+
+.text_cust{
+    color: white;
+    /* margin: 8px; */
+    width: 240px;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+select, ::picker(select) {
+  appearance: base-select;
+}
+
+#fontSize{
+    border: none;
+    color: white;
+    padding: 4px;
+    font-size: 16px;
+    cursor: pointer;
+
+    /* border-radius: 8px; */
+    background-color: rgb(14, 14, 14);
+}
+
+#fontSize:focus{
+    border: none;
+}
+#fontSize::picker(select){
+    border: none;
+    border-radius: 6px;
+    color: white;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.425);
+    background-color: rgb(26, 26, 26);
+
 }

@@ -23,6 +23,16 @@
             <div id="Textbar">
                 <button id="editorBtn" class="textBtn" >Editor</button>
                 <button id="playBtn" class="textBtn" >Play</button>
+                            <div class="text_cust">
+                <label for="fontSize">Font:</label>
+                <select id="fontSize">
+                    <option value="14px">Small (14px)</option>
+                    <option value="16px" selected>Normal (16px)</option>
+                    <option value="20px">Medium (20px)</option>
+                    <option value="28px">Large (28px)</option>
+                    <option value="36px">Extra Large (36px)</option>
+                </select>
+            </div>
             </div>
             <div id="textSection">
             </div>
@@ -33,9 +43,10 @@
             <button id="startRecording">Start Recording</button>
             <input type="range"
             id="speedSlider"
-            min="20"
+            min="60"
             max="300"
             value="60">
+
             
         </div>
     </div>

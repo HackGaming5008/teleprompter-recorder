@@ -12,7 +12,7 @@ const textSection = document.getElementById("textSection");
 const editorBtn = document.getElementById("editorBtn");
 const playBtn = document.getElementById("playBtn");
 const speedSlider = document.getElementById("speedSlider");
-
+const fontSize = document.getElementById("fontSize");
 
 // ensure Play button shows correct initial label
 playBtn.textContent = "Play";
@@ -23,19 +23,98 @@ let cameraActive = false;
 let isPlaying = false;
 
 let speed = 60; // pixels per second
+speedSlider.value = speed;
 let lastTime = null;
 let rafId = null;
 
-textEditor.value = localStorage.getItem("savedScript") || "";
 
+let mediaRecorder;
+let recordedChunks = [];
+let isRecording = false;
+
+textEditor.value = localStorage.getItem("savedScript") || "";
+textSection.textContent = textEditor.value;
+
+window.addEventListener("load", startCam);
+
+async function startCam() {
+    try{
+        cameraActive = true
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video:{
+                facingMode: "user"
+            },
+            audio: true
+        });
+
+        video.srcObject = stream;
+
+    } catch(error){
+        console.error(error);
+        alert(error.message);
+    }
+};
+
+
+
+
+const savedFontSize =
+    localStorage.getItem("fontSize");
+
+if(savedFontSize){
+    fontSize.value = savedFontSize;
+    textSection.style.fontSize = savedFontSize;
+}
+
+function startRecording(){
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = (event) =>{
+        if (event.data.size > 0){
+            recordedChunks.push(event.data);
+
+        }
+    }
+
+    mediaRecorder.onstop = saveRecording;
+    mediaRecorder.start();
+    isRecording = true;
+};
+
+function saveRecording() {
+
+    const blob = new Blob(
+        recordedChunks,
+        { type: "video/webm" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        `recording_${Date.now()}.webm`;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+    recordedChunks = [];
+}
 
 function animate(time) {
     if (!lastTime) lastTime = time;
     const delta = (time - lastTime) / 1000; // seconds
     lastTime = time;
-    // position -= speed * delta;
     textSection.scrollTop += speed * delta;
-    // if (textWrapper) textWrapper.style.transform = `translateY(${position}px)`;
     rafId = requestAnimationFrame(animate);
 };
 
@@ -62,6 +141,16 @@ function toggle_Scroll(){
     }
 };
 
+fontSize.addEventListener("change", () => {
+
+    textSection.style.fontSize =
+        fontSize.value;
+
+    localStorage.setItem(
+        "fontSize",
+        fontSize.value
+    );
+});
 
 speedSlider.addEventListener("input", () => { 
     speed= Number(speedSlider.value);
@@ -98,53 +187,26 @@ saveBtn.addEventListener("click", async () => {
     playBtn.textContent = "Play";
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     lastTime = null;
-    EditorScreen.style.display = "none";
-
+    
     localStorage.setItem(
         "savedScript",
         textEditor.value
     );
+    textSection.textContent = textEditor.value;
+    
+    textSection.scrollTop = 0;
+    EditorScreen.style.display = "none";
 });
 
-startBtn.addEventListener("click", async () =>{
-    if (!cameraActive) {
-        try{
-            cameraActive = true
+startBtn.addEventListener("click", () =>{
 
-            stream = await navigator.mediaDevices.getUserMedia({
-                video:{
-                    facingMode: "user"
-                },
-                audio: true
-            });
+    startRecording();
 
-            video.srcObject = stream;
+    startBtn.textContent = "Stop Recording"
+    startBtn.style.background = "#b32727"
+    startBtn.style.color = "white"
 
-            startBtn.textContent = "Stop Recording"
-            startBtn.style.background = "#b32727"
-            startBtn.style.color = "white"
-
-            toggle_Scroll();
-
-        } catch(error){
-            console.error(error);
-            alert("Could not access camera.");
-        }
-    }
-    else{
-        toggle_Scroll();
-
-        cameraActive = false
-
-        stream.getTracks().forEach(track => track.stop());
-        stream = null
-        video.srcObject = null;
-
-        startBtn.textContent = "Start Recording"
-        startBtn.style.background = "white"
-        startBtn.style.color = "black"
-
-    }
+    toggle_Scroll();
 
 });
 
