@@ -209,7 +209,7 @@ startBtn.addEventListener("click", () =>{
         toggle_Scroll();
     }
     else{
-        startRecording.stop();
+        mediaRecorder.stop();
         isRecording = false;
         toggle_Scroll();
         startBtn.textContent = "Start Recording"
