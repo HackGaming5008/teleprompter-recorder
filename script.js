@@ -199,14 +199,23 @@ saveBtn.addEventListener("click", async () => {
 });
 
 startBtn.addEventListener("click", () =>{
+    if (!isRecording){
+        startRecording();
+    
+        startBtn.textContent = "Stop Recording"
+        startBtn.style.background = "#b32727"
+        startBtn.style.color = "white"
+    
+        toggle_Scroll();
+    }
+    else{
+        saveRecording();
+        toggle_Scroll();
+        startBtn.textContent = "Start Recording"
+        startBtn.style.background = "#ffffff"
+        startBtn.style.color = "black"
+    }
 
-    startRecording();
-
-    startBtn.textContent = "Stop Recording"
-    startBtn.style.background = "#b32727"
-    startBtn.style.color = "white"
-
-    toggle_Scroll();
 
 });
 
