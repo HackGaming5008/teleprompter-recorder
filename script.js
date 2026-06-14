@@ -209,7 +209,8 @@ startBtn.addEventListener("click", () =>{
         toggle_Scroll();
     }
     else{
-        saveRecording();
+        startRecording.stop();
+        isRecording = false;
         toggle_Scroll();
         startBtn.textContent = "Start Recording"
         startBtn.style.background = "#ffffff"
