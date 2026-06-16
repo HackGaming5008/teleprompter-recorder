@@ -58,7 +58,6 @@ async function startCam() {
 
 
 
-
 const savedFontSize =
     localStorage.getItem("fontSize");
 
@@ -69,7 +68,21 @@ if(savedFontSize){
 
 function startRecording(){
     recordedChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
+    const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS &&
+        MediaRecorder.isTypeSupported("video/mp4")) {
+
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: "video/mp4"
+        });
+
+    } else {
+
+        mediaRecorder = new MediaRecorder(stream);
+    }
+
 
     mediaRecorder.ondataavailable = (event) =>{
         if (event.data.size > 0){
@@ -87,7 +100,7 @@ function saveRecording() {
 
     const blob = new Blob(
         recordedChunks,
-        { type: "video/webm" }
+        { type: mediaRecorder.mimeType }
     );
 
     const url = URL.createObjectURL(blob);
@@ -219,5 +232,4 @@ startBtn.addEventListener("click", () =>{
 
 
 });
-
 
